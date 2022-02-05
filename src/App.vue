@@ -1,28 +1,57 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <main class="container">
+      <Title />
+      <TodoForm />
+      <TodoList />
+    </main>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import Title from "@/components/titleBlock/Title.vue";
+import TodoForm from "@/components/todoForm/TodoForm.vue";
+import TodoList from "@/components/todoList/TodoList.vue";
 export default {
-  name: 'App',
+  name: "App",
+  data: () => ({
+    todosItems: [],
+  }),
+  mounted() {},
+  methods: {
+    setTodos(data) {
+      console.log(data);
+    },
+  },
   components: {
-    HelloWorld
-  }
-}
+    Title,
+    TodoForm,
+    TodoList,
+  },
+};
 </script>
 
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Supermercado One";
+}
+body {
+  min-height: 100vh;
+  background: rgb(77, 197, 77);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 50px;
+}
+.container {
+  min-width: 420px;
+  border-radius: 15px;
+  margin: auto;
+  min-height: 450px;
+  background: rgba(238, 201, 201, 0.863);
+  padding: 25px;
 }
 </style>
