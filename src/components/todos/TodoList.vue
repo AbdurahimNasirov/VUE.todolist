@@ -1,45 +1,36 @@
 <template>
   <div>
-    <span
-      class="search"
-      @click="showTrigger = !showTrigger"
-      v-show="!showTrigger"
-      >Search <ion-icon name="search"></ion-icon
-    ></span>
-    <div class="search-block" v-show="showTrigger">
-      <span class="search-block__title">~ Search todo ~</span>
-      <input
-        type="text"
-        placeholder="Search...."
-        v-model="filterInput"
-        class="search-block__input"
-        @input="filterTodos()"
-      />
-      <button class="search-block__trigger" @click="showTrigger = !showTrigger">
-        +
-      </button>
-
-      <div class="search-block__btn-types">
-        <button
-          class="search-block__btn-type"
-          v-for="(type, idx) of filterTypes"
-          :key="idx"
-          :class="type.selected ? 'selected' : ''"
-          @click="filterTypeChooser(idx)"
-        >
-          {{ type.type }}
-        </button>
+    <div>
+      <div class="search-block">
+        <span class="search-block__title">~ Search todo ~</span>
+        <div class="search-block__btn-types">
+          <button
+            class="search-block__btn-type"
+            v-for="(type, idx) of filterTypes"
+            :key="idx"
+            :class="filterWith === type.type ? 'selected' : ''"
+            @click.prevent="filterTodosWithType(idx)"
+          >
+            {{ type.type }}
+          </button>
+        </div>
       </div>
     </div>
+    <ul class="todo-list">
+      <TodoItem
+        v-for="(todo, idx) of filteredTodos"
+        :key="idx"
+        :todo="todo"
+      />
+    </ul>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import TodoItem from "@/components/todos/TodoItem.vue";
+import { mapGetters } from "vuex";
 export default {
-  computed: {
-    ...mapGetters(["setTodos"]),
-  },
+  name: "Todo-list",
   data: () => ({
     showTrigger: false,
     filterTypes: [
@@ -60,20 +51,30 @@ export default {
     filterWith: "All",
     filteredTodos: [],
   }),
-  async mounted() {
-    if (!this.setTodos.length) {
-      await this.getTodos({
-        url: this.$url.todos,
-        body: null,
-        methods: "GET",
-      });
-    }
-    this.filteredTodos = this.setTodos
-    this.$emit('filteredTodos', this.filteredTodos)
-    console.log(this.filteredTodos)
+  computed: {
+    ...mapGetters(["todos"]),
+  },
+  mounted() {
+    this.filteredTodos = this.todos;
   },
   methods: {
-    ...mapActions(["getTodos"]),
+    filterTodosWithType(idx) {
+      this.filterTypes.forEach((type) => (type.selected = false));
+      this.filterTypes[idx].selected = !this.filterTypes[idx].selected;
+      this.filterWith = this.filterTypes[idx].type;
+      if (this.filterWith === "Completed")
+        this.filteredTodos = this.todos.filter(
+          (todo) => todo.completed != false
+        );
+      if (this.filterWith === "Active")
+        this.filteredTodos = this.todos.filter(
+          (todo) => todo.completed === false
+        );
+      if (this.filterWith === "All") this.filteredTodos = this.todos;
+    },
+  },
+  components: {
+    TodoItem,
   },
 };
 </script>
@@ -151,5 +152,8 @@ export default {
 }
 .selected {
   background: #fe7345;
+}
+.todo-list {
+  margin-top: 30px;
 }
 </style>

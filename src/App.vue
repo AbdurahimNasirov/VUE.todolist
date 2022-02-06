@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <main class="container">
-      <Title />
+      <Logo />
       <TodoForm />
       <TodoList />
     </main>
@@ -9,22 +9,31 @@
 </template>
 
 <script>
-import Title from "@/components/titleBlock/Title.vue";
-import TodoForm from "@/components/todoForm/TodoForm.vue";
-import TodoList from "@/components/todoList/TodoList.vue";
+import Logo from "@/components/logo/index.vue";
+import TodoForm from "@/components/form/index.vue";
+import TodoList from "@/components/todos/TodoList.vue";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "App",
   data: () => ({
     todosItems: [],
   }),
-  mounted() {},
+  computed: {
+    ...mapGetters(["todos"]),
+  },
+  created() {
+    if (!localStorage.getItem("Todos")) {
+      localStorage.setItem("Todos", JSON.stringify([]));
+      this.getTodos();
+    } else {
+      this.getTodos();
+    }
+  },
   methods: {
-    setTodos(data) {
-      console.log(data);
-    },
+    ...mapActions(["getTodos"]),
   },
   components: {
-    Title,
+    Logo,
     TodoForm,
     TodoList,
   },

@@ -1,25 +1,19 @@
 <template>
   <li class="todo" :class="todo.completed ? 'completed' : ''">
-    <div class="checkbox-btn" @click="completedChnager(todo.id)">
+    <div class="checkbox-btn" @click="completedChnager">
       <div class="checkbox-btn__empty" v-show="!todo.completed"></div>
-      <ion-icon
-        name="checkmark"
-        class="checkbox-btn__icon"
-        v-show="todo.completed"
-      ></ion-icon>
+      <span class="checkbox-btn__icon" v-show="todo.completed">+</span>
     </div>
     <span class="todo__content">{{ todo.title }}</span>
-    <button class="todo__deleteBtn" @click="deleteTodo(todo.id)">+</button>
+    <button class="todo__deleteBtn" @click="deleteTodo">+</button>
   </li>
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions} from "vuex";
 export default {
   props: ["todo"],
-  computed: {
-    ...mapGetters(["setTodos"]),
-  },
+  name: "Todo-item",
   data: () => ({
     todoTitle: "",
     completed: null,
@@ -28,24 +22,17 @@ export default {
     (this.todoTitle = this.todo.title), (this.completed = this.todo.completed);
   },
   methods: {
-    ...mapActions(["deleteTodos", "patchTodos"]),
-    async completedChnager(id) {
-      await this.patchTodos({
-        url: this.$url.todos + `/${id}`,
-        body: JSON.stringify({
-          title: this.todoTitle,
-          completed: !this.completed,
-        }),
-        method: 'PATCH'
+    ...mapActions(["deleteTodo", "updateTodo"]),
+    completedChnager() {
+      this.updateTodo({
+        title: this.todo.title,
+        completed: !this.todo.completed,
+        id: this.todo.id,
       });
       this.todo.completed = !this.todo.completed;
     },
-    async deleteTodo(id) {
-      await this.deleteTodos({
-        url: this.$url.todos + `/${id}`,
-        body: null,
-        method: "Delete",
-      });
+    deleteTodoBtn() {
+      this.deleteTodo(this.todo.id);
     },
   },
 };

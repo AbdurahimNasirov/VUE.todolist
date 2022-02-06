@@ -1,10 +1,10 @@
 <template>
   <div class="form">
-    <h1 class="form__title">~ Today I need to ~</h1>
-    <form @submit.prevent="addNewTodo()">
+    <h2 class="form__title">~ Today I need to ~</h2>
+    <form @submit.prevent="addNewTodo">
       <input type="text" v-model="todoName" placeholder="Add new todo.." />
-      <button type="submit" class="">
-        <span class="">Submit</span>
+      <button type="submit">
+        <span>Submit</span>
       </button>
     </form>
   </div>
@@ -13,24 +13,20 @@
 <script>
 import { mapActions } from "vuex";
 export default {
+  name: 'Todo-form',
   data: () => ({
     todoName: "",
   }),
   methods: {
-    ...mapActions(["addTodos"]),
-    async addNewTodo() {
+    ...mapActions(["addTodo"]),
+    addNewTodo() {
       if (this.todoName != "") {
-        let todoTitle = this.todoName;
-        await this.addTodos({
-          url: this.$url.todos,
-          body: JSON.stringify({
-            completed: false,
-            title: todoTitle,
-          }),
-          method: "POST",
+        this.addTodo({
+          title: this.todoName,
+          completed: false
         });
-        this.todoName = "";
       }
+      this.todoName = "";
     },
   },
 };
@@ -62,7 +58,7 @@ form {
     &:focus {
       outline: none;
     }
-    margin-right:20px ;
+    margin-right: 20px;
     width: 70%;
     font-family: "Abel";
     font-weight: 700;
