@@ -4,15 +4,14 @@
       <div class="search-block">
         <span class="search-block__title">~ Search todo ~</span>
         <div class="search-block__btn-types">
-          <button
-            class="search-block__btn-type"
-            v-for="(type, idx) of filterTypes"
-            :key="idx"
-            :class="filterWith === type.type ? 'selected' : ''"
-            @click.prevent="filterTodosWithType(idx)"
+          <div 
+            v-for="type in filterTypes"
+            :key="type.id"
+            class="filter__item"
           >
-            {{ type.type }}
-          </button>
+            <input type="radio" :id="type.id" :value="type.id" v-model="filterWith">
+            <label :for="type.id">{{type.type}}</label>
+          </div>
         </div>
       </div>
     </div>
@@ -36,42 +35,30 @@ export default {
     filterTypes: [
       {
         type: "All",
-        selected: false,
+        id: 1
       },
       {
         type: "Active",
-        selected: false,
+        id: 2
       },
       {
         type: "Completed",
-        selected: false,
+        id: 3
       },
     ],
-    filterInput: "",
-    filterWith: "All",
-    filteredTodos: [],
+    filterWith: 1,
   }),
   computed: {
     ...mapGetters(["todos"]),
-  },
-  mounted() {
-    this.filteredTodos = this.todos;
-  },
-  methods: {
-    filterTodosWithType(idx) {
-      this.filterTypes.forEach((type) => (type.selected = false));
-      this.filterTypes[idx].selected = !this.filterTypes[idx].selected;
-      this.filterWith = this.filterTypes[idx].type;
-      if (this.filterWith === "Completed")
-        this.filteredTodos = this.todos.filter(
-          (todo) => todo.completed != false
-        );
-      if (this.filterWith === "Active")
-        this.filteredTodos = this.todos.filter(
-          (todo) => todo.completed === false
-        );
-      if (this.filterWith === "All") this.filteredTodos = this.todos;
-    },
+
+    filteredTodos () {
+      let todos = this.todos
+      if (this.filterWith > 1) {
+        let filter = +this.filterWith === 2
+        todos = this.todos.filter(todo => todo.completed === filter)
+      }
+      return todos
+    }
   },
   components: {
     TodoItem,
