@@ -8,7 +8,7 @@
             class="search-block__btn-type"
             v-for="(type, idx) of filterTypes"
             :key="idx"
-            :class="filterWith === type.type ? 'selected' : ''"
+            :class="filterTypes[idx].selected === true ? 'selected' : ''"
             @click.prevent="filterTodosWithType(idx)"
           >
             {{ type.type }}
@@ -17,11 +17,7 @@
       </div>
     </div>
     <ul class="todo-list">
-      <TodoItem
-        v-for="(todo, idx) of filteredTodos"
-        :key="idx"
-        :todo="todo"
-      />
+      <TodoItem v-for="(todo, idx) of filteredTodos" :key="idx" :todo="todo" />
     </ul>
   </div>
 </template>
@@ -36,7 +32,7 @@ export default {
     filterTypes: [
       {
         type: "All",
-        selected: false,
+        selected: true,
       },
       {
         type: "Active",
@@ -48,11 +44,22 @@ export default {
       },
     ],
     filterInput: "",
-    filterWith: "All",
+    filterType: "All",
     filteredTodos: [],
   }),
   computed: {
     ...mapGetters(["todos"]),
+    filterTodos() {
+      let todos = this.todos
+      if(this.filterType === 'All') return todos;
+      if( this.filterType === 'Completed') return (todos = this.todos.filter(
+          (todo) => todo.completed === true
+        ))
+      if( this.filterType === 'Active') return (todos = this.todos.filter(
+          (todo) => todo.completed === false
+        ))
+
+    },
   },
   mounted() {
     this.filteredTodos = this.todos;
@@ -61,16 +68,8 @@ export default {
     filterTodosWithType(idx) {
       this.filterTypes.forEach((type) => (type.selected = false));
       this.filterTypes[idx].selected = !this.filterTypes[idx].selected;
-      this.filterWith = this.filterTypes[idx].type;
-      if (this.filterWith === "Completed")
-        this.filteredTodos = this.todos.filter(
-          (todo) => todo.completed != false
-        );
-      if (this.filterWith === "Active")
-        this.filteredTodos = this.todos.filter(
-          (todo) => todo.completed === false
-        );
-      if (this.filterWith === "All") this.filteredTodos = this.todos;
+      this.filterType = this.filterTypes[idx].type
+      this.filteredTodos = this.filterTodos
     },
   },
   components: {

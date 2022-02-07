@@ -5,7 +5,7 @@
       <span class="checkbox-btn__icon" v-show="todo.completed">+</span>
     </div>
     <span class="todo__content">{{ todo.title }}</span>
-    <button class="todo__deleteBtn" @click="deleteTodo">+</button>
+    <button class="todo__deleteBtn" @click="deleteTodoBtn">+</button>
   </li>
 </template>
 
