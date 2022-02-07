@@ -22,12 +22,9 @@ export default {
     ...mapGetters(["todos"]),
   },
   created() {
-    if (!localStorage.getItem("Todos")) {
+    if (!localStorage.getItem("Todos")) 
       localStorage.setItem("Todos", JSON.stringify([]));
-      this.getTodos();
-    } else {
-      this.getTodos();
-    }
+    this.getTodos();
   },
   methods: {
     ...mapActions(["getTodos"]),

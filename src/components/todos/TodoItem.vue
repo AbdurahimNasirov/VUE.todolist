@@ -1,11 +1,11 @@
 <template>
-  <li class="todo" :class="todo.completed ? 'completed' : ''">
+  <li class="todo" :class="{completed: todo.completed}">
     <div class="checkbox-btn" @click="completedChnager">
       <div class="checkbox-btn__empty" v-show="!todo.completed"></div>
       <span class="checkbox-btn__icon" v-show="todo.completed">+</span>
     </div>
     <span class="todo__content">{{ todo.title }}</span>
-    <button class="todo__deleteBtn" @click="deleteTodoBtn">+</button>
+    <button class="todo__deleteBtn" @click="deleteTodo(todo.id)">+</button>
   </li>
 </template>
 
@@ -14,13 +14,6 @@ import { mapActions} from "vuex";
 export default {
   props: ["todo"],
   name: "Todo-item",
-  data: () => ({
-    todoTitle: "",
-    completed: null,
-  }),
-  mounted() {
-    (this.todoTitle = this.todo.title), (this.completed = this.todo.completed);
-  },
   methods: {
     ...mapActions(["deleteTodo", "updateTodo"]),
     completedChnager() {
@@ -30,9 +23,6 @@ export default {
         id: this.todo.id,
       });
       this.todo.completed = !this.todo.completed;
-    },
-    deleteTodoBtn() {
-      this.deleteTodo(this.todo.id);
     },
   },
 };
