@@ -75,8 +75,10 @@ export default {
     &__icon {
       width: 20px;
       height: 20px;
-      margin-bottom: 8px;
-      margin-right: 5px;
+      margin-top: -5px;
+      transform: scale(1.6);
+      margin-left: 5px;
+      display: block;
     }
   }
 }
@@ -96,12 +98,12 @@ export default {
     opacity: 0;
   }
   40% {
-    transform: rotateX(-10deg);
+    transform: rotateX(-30deg);
   }
   70% {
-    transform: rotateX(10deg);
+    transform: rotateX(30deg);
   }
-  to {
+  100% {
     transform: rotateX(0deg);
     opacity: 1;
   }

@@ -1,17 +1,17 @@
 <template>
   <div>
-    <div>
-      <div class="search-block">
-        <span class="search-block__title">~ Search todo ~</span>
-        <div class="search-block__btn-types">
-          <div 
-            v-for="type in filterTypes"
-            :key="type.id"
-            class="filter__item"
-          >
-            <input type="radio" :id="type.id" :value="type.id" v-model="filterWith">
-            <label :for="type.id">{{type.type}}</label>
-          </div>
+    <div class="search-block">
+      <span class="search-block__title">~ Search todo ~</span>
+      <div class="search-block__btn-types">
+        <div v-for="type in filterTypes" :key="type.id" class="filter__item">
+          <input
+            type="radio"
+            class="filter-radio"
+            :id="type.id"
+            :value="type.id"
+            v-model="filterWith"
+          />
+          <label :for="type.id" class="filter-label">{{ type.type }}</label>
         </div>
       </div>
     </div>
@@ -31,15 +31,15 @@ export default {
     filterTypes: [
       {
         type: "All",
-        id: 1
-      },
-      {
-        type: "Active",
-        id: 2
+        id: 1,
       },
       {
         type: "Completed",
-        id: 3
+        id: 2,
+      },
+      {
+        type: "Active",
+        id: 3,
       },
     ],
     filterWith: 1,
@@ -47,14 +47,14 @@ export default {
   computed: {
     ...mapGetters(["todos"]),
 
-    filteredTodos () {
-      let todos = this.todos
+    filteredTodos() {
+      let todos = this.todos;
       if (this.filterWith > 1) {
-        let filter = +this.filterWith === 2
-        todos = this.todos.filter(todo => todo.completed === filter)
+        let filter = this.filterWith === 2;
+        todos = this.todos.filter((todo) => todo.completed === filter);
       }
-      return todos
-    }
+      return todos;
+    },
   },
   components: {
     TodoItem,
@@ -79,7 +79,7 @@ export default {
 .search-block {
   position: relative;
   background: rgb(77, 197, 77);
-  padding: 30px;
+  padding: 25px;
   border-radius: 15px;
   width: 90%;
   margin: 25px auto;
@@ -90,20 +90,6 @@ export default {
     text-align: center;
     font-size: 22px;
   }
-  &__input {
-    font-family: "Abel";
-    display: block;
-    width: 80%;
-    margin: 0px auto;
-    border: none;
-    padding: 7px 10px;
-    font-size: 18px;
-    font-weight: 700;
-    border-radius: 5px;
-    &:focus {
-      outline: none;
-    }
-  }
   &__btn-types {
     width: 100%;
     padding: 15px 0 0 0;
@@ -111,30 +97,24 @@ export default {
     justify-content: center;
     gap: 15px;
   }
-  &__btn-type {
-    border: none;
-    padding: 7px;
+  .filter__item {
+    position: relative;
+  }
+  .filter-radio {
+    width: 20px;
+    position: absolute;
+    top: 8px;
+    left: 5px;
     cursor: pointer;
-    border-radius: 5px;
+  }
+  .filter-label {
     font-family: "Abel";
     font-weight: 700;
-  }
-  &__trigger {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    border: none;
-    background: none;
-    transform: rotate(45deg) scale(2.5);
+    background: #fe7345;
+    padding: 5px 7px 7px 25px;
+    border-radius: 10px;
     cursor: pointer;
-    transition: 0.25s;
-    &:hover {
-      color: #fe7345;
-    }
   }
-}
-.selected {
-  background: #fe7345;
 }
 .todo-list {
   margin-top: 30px;
